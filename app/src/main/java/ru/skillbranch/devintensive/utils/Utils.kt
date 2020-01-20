@@ -13,4 +13,16 @@ object Utils {
 
         return Pair(firstName, lastName)
     }
+
+    fun toInitials(firstName: String?, lastName: String?): String? {
+        val tmpFirstName: String = firstName?.trim()?.getOrNull(0)?.toUpperCase()?.toString() ?: ""
+        val tmpLastName: String = lastName?.trim()?.getOrNull(0)?.toUpperCase()?.toString() ?: ""
+
+        val initials: String = tmpFirstName + tmpLastName
+
+        return when {
+            initials.length == 0 -> null
+            else -> initials
+        }
+    }
 }
