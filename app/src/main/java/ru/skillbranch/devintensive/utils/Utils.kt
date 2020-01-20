@@ -25,4 +25,58 @@ object Utils {
             else -> initials
         }
     }
+
+    fun transliteration(payload: String?, divider: String = " "): String? {
+        var result: String? = ""
+
+        payload?.forEach {
+
+            val needTransform = (it != it.toLowerCase())
+
+            val ch = when (it.toLowerCase().toString()) {
+                "а" -> "a"
+                "б" -> "b"
+                "в" -> "v"
+                "г" -> "g"
+                "д" -> "d"
+                "е" -> "e"
+                "ё" -> "e"
+                "ж" -> "zh"
+                "з" -> "z"
+                "и" -> "i"
+                "й" -> "i"
+                "к" -> "k"
+                "л" -> "l"
+                "м" -> "m"
+                "н" -> "n"
+                "о" -> "o"
+                "п" -> "p"
+                "р" -> "r"
+                "с" -> "s"
+                "т" -> "t"
+                "у" -> "u"
+                "ф" -> "f"
+                "х" -> "h"
+                "ц" -> "c"
+                "ч" -> "ch"
+                "ш" -> "sh"
+                "щ" -> "sh'"
+                "ъ" -> ""
+                "ы" -> "i"
+                "ь" -> ""
+                "э" -> "e"
+                "ю" -> "yu"
+                "я" -> "ya"
+                " " -> divider
+                else -> it.toString()
+            }
+
+            result += when (needTransform) {
+                true -> ch.capitalize()
+                else -> ch
+            }
+        }
+
+        return result
+    }
 }
