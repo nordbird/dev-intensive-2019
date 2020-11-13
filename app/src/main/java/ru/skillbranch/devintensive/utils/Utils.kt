@@ -1,11 +1,13 @@
 package ru.skillbranch.devintensive.utils
 
+import kotlin.math.min
+
 object Utils {
     fun parseFullName(fullName: String?): Pair<String?, String?> {
         var nameParts: List<String>? = null
         val tmpFullName: String = fullName?.trim() ?: ""
 
-        if (tmpFullName.length > 0)
+        if (tmpFullName.isNotEmpty())
             nameParts = tmpFullName.split(" ")
 
         val firstName = nameParts?.getOrNull(0)
@@ -21,7 +23,7 @@ object Utils {
         val initials: String = tmpFirstName + tmpLastName
 
         return when {
-            initials.length == 0 -> null
+            initials.isEmpty() -> null
             else -> initials
         }
     }
@@ -78,5 +80,22 @@ object Utils {
         }
 
         return result
+    }
+
+    fun pluralForm(value: Int, forms: List<String>?): String {
+        val cases: IntArray = intArrayOf(2, 0, 1, 1, 1, 2)
+        if (forms?.size != 3) {
+            return ""
+        }
+
+        val index: Int
+
+        if ((value % 100 > 4) && (value % 100 < 20)) {
+            index = 2
+        } else {
+            index = cases[min(value % 10, 5)]
+        }
+
+        return "$value ${forms[index]}"
     }
 }

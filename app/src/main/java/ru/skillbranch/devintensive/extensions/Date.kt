@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.extensions
 
+import ru.skillbranch.devintensive.utils.Utils
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.absoluteValue
@@ -36,16 +37,16 @@ fun Date.humanizeDiff(date: Date = Date()): String {
         in 0..SECOND -> "только что"
         in SECOND..45 * SECOND -> "несколько секунд"
         in 45 * SECOND..75 * SECOND -> "минуту"
-        in 75 * SECOND..45 * MINUTE -> "${absDelta / MINUTE} минут"
+        in 75 * SECOND..45 * MINUTE -> TimeUnits.MINUTE.plural(absDelta.toInt() / MINUTE.toInt())
         in 45 * MINUTE..75 * MINUTE -> "час"
-        in 75 * MINUTE..22 * HOUR -> "${absDelta / HOUR} часов"
+        in 75 * MINUTE..22 * HOUR -> TimeUnits.HOUR.plural(absDelta.toInt() / HOUR.toInt())
         in 22 * HOUR..26 * HOUR -> "день"
-        in 26 * HOUR..360 * DAY -> "${absDelta / DAY} дней"
+        in 26 * HOUR..360 * DAY -> TimeUnits.DAY.plural(absDelta.toInt() / DAY.toInt())
         else -> ""
     }
 
     return when {
-        delta <- 360 * DAY -> "более чем через год"
+        delta < -360 * DAY -> "более чем через год"
         delta > 360 * DAY -> "более года назад"
         delta < 0 -> "через $base"
         else -> "$base назад"
@@ -53,8 +54,18 @@ fun Date.humanizeDiff(date: Date = Date()): String {
 }
 
 enum class TimeUnits {
-    SECOND,
-    MINUTE,
-    HOUR,
-    DAY
+    SECOND {
+        override fun plural(value: Int) = Utils.pluralForm(value, listOf("секунду", "секунды", "секунд"))
+    },
+    MINUTE {
+        override fun plural(value: Int) = Utils.pluralForm(value, listOf("минуту", "минуты", "минут"))
+    },
+    HOUR {
+        override fun plural(value: Int) = Utils.pluralForm(value, listOf("час", "часа", "часов"))
+    },
+    DAY {
+        override fun plural(value: Int) = Utils.pluralForm(value, listOf("день", "дня", "дней"))
+    };
+
+    abstract fun plural(value: Int): String
 }
