@@ -1,5 +1,7 @@
 package ru.skillbranch.devintensive.models
 
+import androidx.core.text.isDigitsOnly
+
 class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME) {
 
     fun askQuestion(): String = when (question) {
@@ -12,12 +14,22 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     }
 
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
-        return if (question.answer.contains(answer)) {
-            question = question.nextQuestion()
-            "Отлично - это правильный ответ!\n${question.question}" to status.color
+        return if (question == Question.IDLE) {
+            question.question to status.color
         } else {
-            status = status.nextStatus()
-            "Это не правильный ответ!\n${question.question}" to status.color
+            val res = question.isValidAnswer(answer)
+            if (res.first) {
+                if (question.answer.contains(answer.toLowerCase())) {
+                    question = question.nextQuestion()
+                    "Отлично - это правильный ответ!\n${question.question}" to status.color
+                } else {
+                    status = status.nextStatus()
+                    "Это не правильный ответ!\n${question.question}" to status.color
+                }
+            } else {
+                status = status.nextStatus()
+                "${res.second}\n${question.question}" to status.color
+            }
         }
     }
 
@@ -39,23 +51,45 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     enum class Question(val question: String, val answer: List<String>) {
         NAME("Как меня зовут?", listOf("бендер", "bender")) {
             override fun nextQuestion(): Question = PROFESSION
+            override fun isValidAnswer(answer: String): Pair<Boolean, String> {
+                val res = answer.isNotEmpty() && answer[0].isUpperCase()
+                return Pair(res, if (res) "" else "Имя должно начинаться с заглавной буквы")
+            }
         },
         PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
             override fun nextQuestion(): Question = MATERIAL
+            override fun isValidAnswer(answer: String): Pair<Boolean, String> {
+                val res = answer.isNotEmpty() && answer[0].isLowerCase()
+                return Pair(res, if (res) "" else "Профессия должна начинаться со строчной буквы")
+            }
         },
         MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
             override fun nextQuestion(): Question = BDAY
+            override fun isValidAnswer(answer: String): Pair<Boolean, String> {
+                val res = answer.isNotEmpty() && !answer.contains(Regex("\\d"))
+                return Pair(res, if (res) "" else "Материал не должен содержать цифр")
+            }
         },
         BDAY("Когда меня сделали?", listOf("2993")) {
             override fun nextQuestion(): Question = SERIAL
+            override fun isValidAnswer(answer: String): Pair<Boolean, String> {
+                val res = answer.isNotEmpty() && answer.isDigitsOnly()
+                return Pair(res, if (res) "" else "Год моего рождения должен содержать только цифры")
+            }
         },
         SERIAL("Мой серийный номер?", listOf("2716057")) {
             override fun nextQuestion(): Question = IDLE
+            override fun isValidAnswer(answer: String): Pair<Boolean, String> {
+                val res = answer.isNotEmpty() && answer.isDigitsOnly() && (answer.length == 7)
+                return Pair(res, if (res) "" else "Серийный номер содержит только цифры, и их 7")
+            }
         },
         IDLE("На этом все, вопросов больше нет", listOf()) {
             override fun nextQuestion(): Question = IDLE
+            override fun isValidAnswer(answer: String): Pair<Boolean, String> = Pair(true, "")
         };
 
         abstract fun nextQuestion(): Question
+        abstract fun isValidAnswer(answer: String): Pair<Boolean, String>
     }
 }
