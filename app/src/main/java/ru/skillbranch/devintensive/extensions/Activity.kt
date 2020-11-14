@@ -13,3 +13,12 @@ fun Activity.hideKeyboard() {
     view.clearFocus();
 }
 
+fun Activity.isKeyboardOpen(): Boolean {
+    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+    return imm?.isAcceptingText ?: false
+}
+
+fun Activity.isKeyboardClosed(): Boolean {
+    return !this.isKeyboardOpen()
+}
+
