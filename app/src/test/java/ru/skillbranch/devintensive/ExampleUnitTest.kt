@@ -35,6 +35,20 @@ class ExampleUnitTest {
     }
 
     @Test
+    fun test_UserBuilder() {
+        val userA = User.Builder().id("1")
+                .firstName("Roma")
+                .lastName("Ivanov")
+                .avatar("")
+                .rating(5)
+                .respect(5)
+                .lastVisit(Date())
+                .isOnline(true)
+                .build()
+    }
+
+
+    @Test
     fun test_UtilsParseFullName() {
         println(Utils.parseFullName(null))
         println(Utils.parseFullName(""))
