@@ -21,13 +21,18 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             if (res.first) {
                 if (question.answer.contains(answer.toLowerCase())) {
                     question = question.nextQuestion()
-                    "Отлично - это правильный ответ!\n${question.question}" to status.color
+                    "Отлично - ты справился\n${question.question}" to status.color
                 } else {
-                    status = status.nextStatus()
-                    "Это не правильный ответ!\n${question.question}" to status.color
+                    if (status == Status.CRITICAL) {
+                        status = Status.NORMAL
+                        question = Question.NAME
+                        "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+                    } else {
+                        status = status.nextStatus()
+                        "Это неправильный ответ\n${question.question}" to status.color
+                    }
                 }
             } else {
-                status = status.nextStatus()
                 "${res.second}\n${question.question}" to status.color
             }
         }
@@ -37,7 +42,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         NORMAL(Triple(255, 255, 255)),
         WARNING(Triple(255, 120, 0)),
         DANGER(Triple(255, 60, 60)),
-        CRITICAL(Triple(255, 255, 0));
+        CRITICAL(Triple(255, 0, 0));
 
         fun nextStatus(): Status {
             return if (this.ordinal < values().lastIndex) {
@@ -70,7 +75,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                 return Pair(res, if (res) "" else "Материал не должен содержать цифр")
             }
         },
-        BDAY("Когда меня сделали?", listOf("2993")) {
+        BDAY("Когда меня создали?", listOf("2993")) {
             override fun nextQuestion(): Question = SERIAL
             override fun isValidAnswer(answer: String): Pair<Boolean, String> {
                 val res = answer.isNotEmpty() && answer.isDigitsOnly()
