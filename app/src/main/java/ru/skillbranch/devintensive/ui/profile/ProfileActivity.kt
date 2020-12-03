@@ -3,6 +3,9 @@ package ru.skillbranch.devintensive.ui.profile
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -72,7 +75,7 @@ class ProfileActivity : AppCompatActivity() {
             iv_avatar.setImageDrawable(getDefaultAvatar(initials))
         } else {
             iv_avatar.setImageResource(R.drawable.avatar_default)
-        }
+    }
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
@@ -112,7 +115,7 @@ class ProfileActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 isValidRepository = Utils.isValidGitHubURL(s.toString())
                 showRepositoryState(isValidRepository)
-            }
+    }
 
         })
     }

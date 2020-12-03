@@ -1,10 +1,12 @@
-package ru.ubaka.myapplication
+package ru.skillbranch.devintensive
 
 import org.junit.Test
 
 import org.junit.Assert.*
 import ru.skillbranch.devintensive.extensions.*
 import ru.skillbranch.devintensive.models.*
+import ru.skillbranch.devintensive.models.data.Chat
+import ru.skillbranch.devintensive.models.data.User
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
@@ -69,8 +71,8 @@ class ExampleUnitTest {
     @Test
     fun test_MessageFactory() {
         val user = User.makeUser("Anton Glebov")
-        val txtMessage = BaseMessage.makeMessage(user, Chat("1"), payload = "Hello :)", type = "text")
-        val imgMessage = BaseMessage.makeMessage(user, Chat("1"), payload = "image url", type = "image")
+        val txtMessage = BaseMessage.makeMessage(user, Chat("1", "Title 1"), payload = "Hello :)", type = "text")
+        val imgMessage = BaseMessage.makeMessage(user, Chat("1", "Title 2"), payload = "image url", type = "image")
 
         when (txtMessage) {
             is TextMessage -> println("txtMessage is Text")
