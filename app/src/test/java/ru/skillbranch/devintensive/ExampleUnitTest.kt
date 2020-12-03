@@ -25,11 +25,14 @@ class ExampleUnitTest {
     fun test_UserConstructor() {
         val userA = User("0");
         val userB = User("1", "Vova", "Popov")
+        assertNotNull("userA is null", userA)
+        assertNotNull("userB is null", userB)
     }
 
     @Test
     fun test_UserFactory() {
         val userA = User.makeUser("Pert Kozlov")
+        assertNotNull("userA is null", userA)
     }
 
     @Test
@@ -43,6 +46,8 @@ class ExampleUnitTest {
                 .lastVisit(Date())
                 .isOnline(true)
                 .build()
+
+        assertNotNull("userA is null", userA)
     }
 
 
