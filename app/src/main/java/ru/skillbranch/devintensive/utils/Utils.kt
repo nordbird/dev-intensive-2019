@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.utils
 
+import kotlin.math.absoluteValue
 import kotlin.math.min
 
 object Utils {
@@ -82,18 +83,19 @@ object Utils {
         return result
     }
 
-    fun pluralForm(value: Int, forms: List<String>?): String {
+    fun pluralForm(value: Long, forms: List<String>?): String {
         val cases: IntArray = intArrayOf(2, 0, 1, 1, 1, 2)
         if (forms?.size != 3) {
             return ""
         }
 
         val index: Int
+        val absValue = value.absoluteValue
 
-        if ((value % 100 > 4) && (value % 100 < 20)) {
+        if ((absValue % 100 > 4) && (absValue % 100 < 20)) {
             index = 2
         } else {
-            index = cases[min(value % 10, 5)]
+            index = cases[min(absValue % 10, 5).toInt()]
         }
 
         return "$value ${forms[index]}"

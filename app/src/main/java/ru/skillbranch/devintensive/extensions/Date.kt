@@ -48,11 +48,11 @@ fun Date.humanizeDiff(date: Date = Date()): String {
         in 0..SECOND -> "только что"
         in SECOND..45 * SECOND -> "несколько секунд"
         in 45 * SECOND..75 * SECOND -> "минуту"
-        in 75 * SECOND..45 * MINUTE -> TimeUnits.MINUTE.plural(absDelta.toInt() / MINUTE.toInt())
+        in 75 * SECOND..45 * MINUTE -> TimeUnits.MINUTE.plural(absDelta / MINUTE)
         in 45 * MINUTE..75 * MINUTE -> "час"
-        in 75 * MINUTE..22 * HOUR -> TimeUnits.HOUR.plural(absDelta.toInt() / HOUR.toInt())
+        in 75 * MINUTE..22 * HOUR -> TimeUnits.HOUR.plural(absDelta / HOUR)
         in 22 * HOUR..26 * HOUR -> "день"
-        in 26 * HOUR..360 * DAY -> TimeUnits.DAY.plural(absDelta.toInt() / DAY.toInt())
+        in 26 * HOUR..360 * DAY -> TimeUnits.DAY.plural(absDelta / DAY)
         else -> ""
     }
 
@@ -66,17 +66,17 @@ fun Date.humanizeDiff(date: Date = Date()): String {
 
 enum class TimeUnits {
     SECOND {
-        override fun plural(value: Int) = Utils.pluralForm(value, listOf("секунду", "секунды", "секунд"))
+        override fun plural(value: Long) = Utils.pluralForm(value, listOf("секунду", "секунды", "секунд"))
     },
     MINUTE {
-        override fun plural(value: Int) = Utils.pluralForm(value, listOf("минуту", "минуты", "минут"))
+        override fun plural(value: Long) = Utils.pluralForm(value, listOf("минуту", "минуты", "минут"))
     },
     HOUR {
-        override fun plural(value: Int) = Utils.pluralForm(value, listOf("час", "часа", "часов"))
+        override fun plural(value: Long) = Utils.pluralForm(value, listOf("час", "часа", "часов"))
     },
     DAY {
-        override fun plural(value: Int) = Utils.pluralForm(value, listOf("день", "дня", "дней"))
+        override fun plural(value: Long) = Utils.pluralForm(value, listOf("день", "дня", "дней"))
     };
 
-    abstract fun plural(value: Int): String
+    abstract fun plural(value: Long): String
 }
