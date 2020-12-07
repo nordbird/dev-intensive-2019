@@ -131,11 +131,13 @@ class AvatarImageView @JvmOverloads constructor(
             drawInitials(canvas)
         }
 
-        // resize rect for border
-        val half = (borderWidth / 2).toInt()
-        borderRect.set(viewRect)
-        borderRect.inset(half, half)
-        canvas?.drawOval(borderRect.toRectF(), borderPaint)
+        if (borderWidth > 0) {
+            // resize rect for border
+            val half = (borderWidth / 2).toInt()
+            borderRect.set(viewRect)
+            borderRect.inset(half, half)
+            canvas?.drawOval(borderRect.toRectF(), borderPaint)
+        }
     }
 
     override fun onSaveInstanceState(): Parcelable? {

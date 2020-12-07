@@ -25,10 +25,31 @@ data class Chat(
         else -> "" to ""
     }
 
+    private fun lastIncomingMessageDate(): Date? = messages.filter { it.isIncoming }.lastOrNull()?.date
+
+    private fun lastIncomingMessageShort(): Pair<String, String?> = when (val lastMessage = messages.filter { it.isIncoming }.lastOrNull()) {
+        is TextMessage -> lastMessage.text.orEmpty() to lastMessage.from.firstName
+        is ImageMessage -> "${lastMessage.from.firstName} отправил фото" to lastMessage.from.firstName
+        else -> "" to ""
+    }
+
     private fun isSingle(): Boolean = members.size == 1
 
     fun toChatItem(): ChatItem {
-        return if (isSingle()) {
+        return if (isArchived) {
+            ChatItem(
+                    id,
+                    null,
+                    "",
+                    title,
+                    lastIncomingMessageShort().first,
+                    unreadableMessageCount(),
+                    lastIncomingMessageDate()?.shortFormat(),
+                    false,
+                    ChatType.ARCHIVE,
+                    lastIncomingMessageShort().second
+            )
+        } else if (isSingle()) {
             val user = members.first()
             ChatItem(
                     id,

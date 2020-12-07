@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import ru.skillbranch.devintensive.extensions.mutableLiveData
+import ru.skillbranch.devintensive.models.data.Chat
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.repositories.ChatRepository
 
@@ -12,9 +13,22 @@ class MainViewModel : ViewModel() {
     private val query = mutableLiveData("")
     private val chatRepository = ChatRepository
     private val chatItems = Transformations.map(chatRepository.loadChats()) { chats ->
-        return@map chats.filter { !it.isArchived }
+        val (defChats, archiveChats) = chats.partition { !it.isArchived }
+
+        val chatList = defChats
                 .map { it.toChatItem() }
                 .sortedBy { it.id.toInt() }
+
+        if (archiveChats.isNotEmpty()) {
+            val archiveChat = Chat("", "").apply { isArchived = true }
+            archiveChats.forEach { archiveChat.messages.addAll(it.messages) }
+
+            archiveChat.messages.sortBy { it.date }
+
+            return@map listOf(archiveChat.toChatItem()) + chatList
+        }
+
+        return@map chatList
     }
 
     fun getChatData(): LiveData<List<ChatItem>> {
