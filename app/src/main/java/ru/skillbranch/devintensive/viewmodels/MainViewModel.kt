@@ -21,11 +21,8 @@ class MainViewModel : ViewModel() {
 
         if (archiveChats.isNotEmpty()) {
             val archiveChat = Chat("", "").apply { isArchived = true }
-            archiveChats.forEach { archiveChat.messages.addAll(it.messages) }
 
-            archiveChat.messages.sortBy { it.date }
-
-            return@map listOf(archiveChat.toChatItem()) + chatList
+            return@map listOf(archiveChat.toArchiveItem(archiveChats)) + chatList
         }
 
         return@map chatList

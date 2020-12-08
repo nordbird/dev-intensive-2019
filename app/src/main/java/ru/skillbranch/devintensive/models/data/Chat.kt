@@ -25,31 +25,10 @@ data class Chat(
         else -> "" to ""
     }
 
-    private fun lastIncomingMessageDate(): Date? = messages.filter { it.isIncoming }.lastOrNull()?.date
-
-    private fun lastIncomingMessageShort(): Pair<String, String?> = when (val lastMessage = messages.filter { it.isIncoming }.lastOrNull()) {
-        is TextMessage -> lastMessage.text.orEmpty() to lastMessage.from.firstName
-        is ImageMessage -> "${lastMessage.from.firstName} отправил фото" to lastMessage.from.firstName
-        else -> "" to ""
-    }
-
     private fun isSingle(): Boolean = members.size == 1
 
     fun toChatItem(): ChatItem {
-        return if (isArchived) {
-            ChatItem(
-                    id,
-                    null,
-                    "",
-                    title,
-                    lastIncomingMessageShort().first,
-                    unreadableMessageCount(),
-                    lastIncomingMessageDate()?.shortFormat(),
-                    false,
-                    ChatType.ARCHIVE,
-                    lastIncomingMessageShort().second
-            )
-        } else if (isSingle()) {
+        return if (isSingle()) {
             val user = members.first()
             ChatItem(
                     id,
@@ -76,6 +55,23 @@ data class Chat(
             )
         }
     }
+
+    fun toArchiveItem(archiveChats: List<Chat>): ChatItem {
+        val lastChat = archiveChats.sortedBy { it.lastMessageDate() }.last()
+        return ChatItem(
+                "-1",
+                null,
+                "",
+                "Архив чатов",
+                lastChat.lastMessageShort().first,
+                archiveChats.sumBy { it.unreadableMessageCount() },
+                lastChat.lastMessageDate()?.shortFormat(),
+                false,
+                ChatType.ARCHIVE,
+                "@${lastChat.lastMessageShort().second}"
+        )
+    }
+
 
 }
 
