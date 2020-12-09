@@ -98,4 +98,10 @@ object Utils {
 
         return "$value ${forms[index]}"
     }
+
+    fun isValidGitHubURL(url: String): Boolean {
+        val str = url.trim()
+        return url.isEmpty() ||
+                str.matches(Regex("""(https://)?(www.)?github.com/(?!enterprise|features|topics|collections|trending|events|marketplace|pricing|nonprofit|customer-stories|security|login|join)(\w*[^/])"""))
+    }
 }
