@@ -91,10 +91,10 @@ class ProfileActivity : AppCompatActivity() {
         showRepositoryState(isValidRepository)
 
         btn_edit.setOnClickListener {
-            if (isEditMode && !isValidRepository) et_repository.text.clear()
-            if (isEditMode && isValidRepository) saveProfileInfo()
+            if (isEditMode) saveProfileInfo()
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
+            if (!isValidRepository) et_repository.text.clear()
         }
 
         btn_switch_theme.setOnClickListener {
