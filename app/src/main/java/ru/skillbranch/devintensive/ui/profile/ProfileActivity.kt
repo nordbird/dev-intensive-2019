@@ -1,25 +1,22 @@
 package ru.skillbranch.devintensive.ui.profile
 
-import android.graphics.Color
-import android.graphics.ColorFilter
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.hideKeyboard
-import ru.skillbranch.devintensive.models.Bender
+import ru.skillbranch.devintensive.extensions.dpToPx
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
@@ -69,6 +66,12 @@ class ProfileActivity : AppCompatActivity() {
             for ((k, v) in viewFields) {
                 v.text = it[k].toString()
             }
+        }
+        val initials = Utils.toInitials(profile.firstName, profile.lastName)
+        if (initials != null) {
+            iv_avatar.setImageDrawable(getDefaultAvatar(initials))
+        } else {
+            iv_avatar.setImageResource(R.drawable.avatar_default)
         }
     }
 
@@ -168,6 +171,24 @@ class ProfileActivity : AppCompatActivity() {
             viewModel.saveProfileData(this)
         }
 
+    }
+
+    private fun getDefaultAvatar(initials: String): Drawable {
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.textSize = this.dpToPx(48)
+        paint.color = Color.WHITE
+        paint.textAlign = Paint.Align.CENTER
+
+        val size = 112
+        val image = Bitmap.createBitmap(this.dpToPx(size).toInt(), this.dpToPx(size).toInt(), Bitmap.Config.ARGB_8888)
+
+        val color = TypedValue()
+        theme.resolveAttribute(R.attr.colorAccent, color, true)
+        image.eraseColor(color.data)
+        val canvas = Canvas(image)
+        canvas.drawText(initials, this.dpToPx(size / 2), this.dpToPx(size / 2) + paint.textSize / 3, paint)
+
+        return BitmapDrawable(resources, image)
     }
 }
 
