@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.ui.profile
 
+import android.annotation.SuppressLint
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -16,7 +17,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.dpToPx
@@ -47,21 +48,21 @@ class ProfileActivity : AppCompatActivity() {
     }
 
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putBoolean(IS_EDIT_MODE, isEditMode)
-        outState?.putBoolean(IS_VALID_REPOSITORY, isValidRepository)
+        outState.putBoolean(IS_EDIT_MODE, isEditMode)
+        outState.putBoolean(IS_VALID_REPOSITORY, isValidRepository)
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         viewModel.getProfileData().observe(this, Observer { updateUI(it) })
         viewModel.getTheme().observe(this, Observer { updateTheme(it) })
     }
 
     private fun updateTheme(mode: Int) {
         Log.d("M_ProfileActivity", "updateTheme")
-        delegate.setLocalNightMode(mode)
+        delegate.localNightMode = mode
     }
 
     private fun updateUI(profile: Profile) {
@@ -120,6 +121,7 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun showCurrentMode(isEdit: Boolean) {
         val info = viewFields.filter {
             setOf("firstName",

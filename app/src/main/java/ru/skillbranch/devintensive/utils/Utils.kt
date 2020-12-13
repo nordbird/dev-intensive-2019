@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.utils
 
+import java.util.*
 import kotlin.math.absoluteValue
 import kotlin.math.min
 
@@ -36,7 +37,7 @@ object Utils {
 
             val needTransform = (it != it.toLowerCase())
 
-            val ch = when (it.toLowerCase().toString()) {
+            var ch = when (it.toLowerCase().toString()) {
                 "а" -> "a"
                 "б" -> "b"
                 "в" -> "v"
@@ -74,10 +75,14 @@ object Utils {
                 else -> it.toString()
             }
 
-            result += when (needTransform) {
-                true -> ch.capitalize()
-                else -> ch
+            if (needTransform) {
+                ch = when (ch.length) {
+                    0 -> ch
+                    1 -> ch.toUpperCase(Locale.getDefault())
+                    else -> ch.substring(0, 1).toUpperCase(Locale.getDefault()) + ch.substring(1)
+                }
             }
+            result += ch
         }
 
         return result

@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.ui.adapters
 
+import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
@@ -58,6 +59,7 @@ class ChatItemTouchHelperCallback(
         super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun drawIcon(canvas: Canvas, itemView: View, dX: Float) {
         val icon = itemView.resources.getDrawable(R.drawable.ic_archive_black_24dp, itemView.context.theme)
         val iconSize = itemView.resources.getDimensionPixelSize(R.dimen.icon_size)

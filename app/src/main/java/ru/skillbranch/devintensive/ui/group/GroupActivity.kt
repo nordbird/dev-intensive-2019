@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.ui.group
 
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -10,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.children
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
@@ -56,8 +57,8 @@ class GroupActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return if (item?.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
             finish()
             overridePendingTransition(R.anim.idle, R.anim.bottom_down)
             true
@@ -89,7 +90,7 @@ class GroupActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(GroupViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(GroupViewModel::class.java)
         viewModel.getUsersData().observe(this, Observer { userAdapter.updateData(it) })
         viewModel.getSelectedData().observe(this, Observer {
             updateChips(it)
@@ -101,6 +102,7 @@ class GroupActivity : AppCompatActivity() {
         if (isShow) fab.show() else fab.hide()
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun addChipToGroup(user: UserItem) {
         val chip = Chip(this).apply {
             text = user.fullName

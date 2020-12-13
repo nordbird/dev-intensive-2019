@@ -1,6 +1,7 @@
 package ru.skillbranch.devintensive.utils
 
 import androidx.core.text.isDigitsOnly
+import java.util.*
 
 class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME) {
 
@@ -19,7 +20,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         } else {
             val res = question.isValidAnswer(answer)
             if (res.first) {
-                if (question.answer.contains(answer.toLowerCase())) {
+                if (question.answer.contains(answer.toLowerCase(Locale.getDefault()))) {
                     question = question.nextQuestion()
                     "Отлично - ты справился\n${question.question}" to status.color
                 } else {

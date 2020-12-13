@@ -23,7 +23,7 @@ class ExampleUnitTest {
 
     @Test
     fun test_UserConstructor() {
-        val userA = User("0");
+        val userA = User("0")
         val userB = User("1", "Vova", "Popov")
         assertNotNull("userA is null", userA)
         assertNotNull("userB is null", userB)

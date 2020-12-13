@@ -1,6 +1,7 @@
 package ru.skillbranch.devintensive.ui.custom
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
@@ -21,6 +22,7 @@ import ru.skillbranch.devintensive.extensions.dpToPx
 import kotlin.math.max
 import kotlin.math.truncate
 
+@SuppressLint("AppCompatCustomView")
 class AvatarImageView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
